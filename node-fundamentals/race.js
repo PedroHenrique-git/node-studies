@@ -1,2 +1,2 @@
-setTimeout(() => console.log('rabbit finishes!'), 1000);  
-console.log('turtle finishes!');
+setTimeout(() => console.log('🐇 finishes!'), 1000);  
+console.log('🐢 finishes!');
