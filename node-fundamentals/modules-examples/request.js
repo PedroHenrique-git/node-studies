@@ -10,3 +10,5 @@ function send(url, data) {
 module.exports = {
     send
 };
+
+console.log('HEllo from request.js');
