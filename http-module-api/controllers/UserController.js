@@ -1,14 +1,16 @@
 const { readView } = require("../utils/readView");
 const { resolve } = require("path");
-const { USERS_DATA_SOURCE } = require("../model/UserModel");
 const { getDataFromPost } = require("../utils/getDataFromPost");
+const { randomUUID } = require("crypto");
+const { DataSource } = require("../dataSource/DataSource");
 
 class UserController {
-    constructor(req, res) {
+    constructor(req, res, parameter) {
         this._view = '';
         this._req = req;
         this._res = res;
-        this._datasource = USERS_DATA_SOURCE;
+        this._parameter = parameter; 
+        this._dataSource = new DataSource();
     }
 
     /**
@@ -49,8 +51,10 @@ class UserController {
 
     async postCreateUser() {
         try {
-            const user = await getDataFromPost(this._req);
-            this._datasource.push(JSON.parse(user));
+            const data = await getDataFromPost(this._req);
+            const [key, value] = data.split('=');
+            this._dataSource.setDatOnDataSource({ id: randomUUID(), [key]: value });
+
             this.view = await readView(resolve(__dirname, "..", "views", "user-created-successfully.html"));
             this._res.writeHead(200, { 'Content-type': 'text/html' });
             this._res.end(this.view);
@@ -59,10 +63,35 @@ class UserController {
         }
     }
 
-    getUsers() {
+    async updateData() {
         try {
+            const data = await getDataFromPost(this._req);
+            await this._dataSource.updateDataFromDataSource(this._parameter, JSON.parse(data));
+
+            this.view = await readView(resolve(__dirname, "..", "views", "user-updated-successfully.html"));
+            this._res.writeHead(200, { 'Content-type': 'text/html' });
+            this._res.end(this.view);
+        } catch(err) {
+            this._setContentError(500, err);      
+        }
+    }
+
+    async deleteUser() {
+        try {
+            await this._dataSource.deleteDataFromDataSource(this._parameter);
+            this.view = await readView(resolve(__dirname, "..", "views", "user-deleted-successfully.html"));
+            this._res.writeHead(200, { 'Content-type': 'text/html' });
+            this._res.end(this.view);
+        } catch(err) {
+            this._setContentError(500, err);      
+        }    
+    }
+
+    async getUsers() {
+        try {
+            const users = await this._dataSource.getData();
             this._res.writeHead(200, { 'Content-type': 'application/json' });
-            this._res.end(JSON.stringify(this._datasource));      
+            this._res.end(JSON.stringify(users));      
         } catch(err) {
             this._setContentError(500, err);  
         }
