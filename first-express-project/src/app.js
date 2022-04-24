@@ -1,5 +1,6 @@
 const express = require('express');
 const friendsRouter = require('./routes/friends.route');
+const { join, resolve } = require('path');
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,7 +19,8 @@ app.use((req, __, next) => {
   console.timeEnd();
 });
 
-//app.use(express.static('public'));
+// "__dirname + '/public'"
+app.use('/public', express.static(join(__dirname, '/public')));
 
 app.use(express.json());
 
