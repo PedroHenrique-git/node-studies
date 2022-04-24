@@ -1,10 +1,13 @@
 const express = require('express');
 const friendsRouter = require('./routes/friends.route');
-const { join, resolve } = require('path');
+const { join } = require('path');
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+
+app.set('view engine', 'hbs');
+app.set('views', join(__dirname, 'views'));
 
 app.use((req, __, next) => {
   console.time();
@@ -23,6 +26,12 @@ app.use((req, __, next) => {
 app.use('/public', express.static(join(__dirname, '/public')));
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.render('index', {
+    title: 'Helooooooooooo',
+  });
+});
 
 app.use('/friends', friendsRouter);
 
