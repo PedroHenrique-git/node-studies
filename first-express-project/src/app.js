@@ -10,13 +10,15 @@ app.use((req, __, next) => {
 
   console.log(`
     METHOD: ${req.method}
-    URL: ${req.url}
+    URL: ${req.baseUrl}${req.url}
     PARAMS: ${JSON.stringify(req.params)}
   `);
   next();
 
   console.timeEnd();
 });
+
+//app.use(express.static('public'));
 
 app.use(express.json());
 

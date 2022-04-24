@@ -9,6 +9,7 @@ friendsRouter.use((req, _, next) => {
 });
 
 friendsRouter.get('/', friendsController.getFriends);
+friendsRouter.get('/photo', friendsController.getFriendPhoto);
 friendsRouter.get('/:id', friendsController.getFriend);
 friendsRouter.post('/', friendsController.createFriend);
 

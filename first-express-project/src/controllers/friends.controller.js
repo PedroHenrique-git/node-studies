@@ -1,5 +1,6 @@
 const { friends } = require('../models/friends.model');
 const crypto = require('crypto');
+const { join } = require('path');
 
 function getFriends(_, res) {
   return res.status(200).json(friends);
@@ -31,8 +32,15 @@ function createFriend(req, res) {
   res.status(200).json(newFriend);
 }
 
+function getFriendPhoto(req, res) {
+  res
+    .status(200)
+    .sendFile(join(__dirname, '..', 'public', 'images', 'img1.jpg'));
+}
+
 module.exports = {
   getFriends,
   getFriend,
   createFriend,
+  getFriendPhoto,
 };
