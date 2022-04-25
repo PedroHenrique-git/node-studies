@@ -1,0 +1,15 @@
+<section class="posts">
+    <div class="posts-lists">
+        {{#each posts as |post|}}
+            <div class="post">
+                <h3 class="post-title">{{post.title}}</h3>
+                <p class="post-body">{{post.body}}</p>
+                <div class="posts-controls">
+                    <a href="/posts/{{post.id}}">see post</a>
+                    <a href="/posts/edit/{{post.id}}">edit post</a>
+                    <a href="/posts/delete/{{post.id}}">delete post</a>
+                </div>
+            </div>
+        {{/each}}    
+    </div>
+</section>

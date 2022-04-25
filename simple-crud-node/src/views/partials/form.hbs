@@ -1,0 +1,21 @@
+{{#if id}}
+<form action="/posts/edit/{{id}}" method="post">
+{{else}}
+<form action="/posts/insert" method="post">
+{{/if}}
+    <label>
+        <p>Title: </p>
+        <input type="text" name="title" id="title">
+    </label>
+    <label>
+        <p>Body: </p>
+        <input type="text" name="body" id="body">
+    </label>
+    <button type="submit">
+        {{#if id}}
+            update
+        {{else}}
+            insert
+        {{/if}}
+    </button>
+</form>
