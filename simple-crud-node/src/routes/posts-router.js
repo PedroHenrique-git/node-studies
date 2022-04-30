@@ -8,5 +8,6 @@ postsRouter.get('/:id', PostController.getPost);
 postsRouter.get('/delete/:id', PostController.deletePost);
 postsRouter.get('/edit/:id', PostController.editPostRenderForm);
 postsRouter.post('/edit/:id', PostController.editPost);
+postsRouter.post('/insert', PostController.insertPost);
 
 export default postsRouter;

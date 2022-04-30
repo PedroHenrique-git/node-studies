@@ -30,6 +30,16 @@ class PostController {
         }
     }
 
+    async insertPost(req, res) {
+        try {
+            const bodyOfRequest = req.body;
+            await PostModel.insertPost(bodyOfRequest);
+            return res.status(200).render('success-page', { message: 'post inserted successfully!' })
+        } catch(err) {
+            return res.status(200).render('error', { message: err.message });
+        }
+    }
+
     async editPost(req, res) {
         try {
             const { id } = req.params;
