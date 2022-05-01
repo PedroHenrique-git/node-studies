@@ -4,12 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix client",
+    "install": "npm run install-server && npm run install-client",
+    "server": "npm run start --prefix server",
+    "client": "npm run start --prefix client",
+    "watch": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "concurrently \"npm run test --prefix server\" \"npm run test --prefix client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5"
+    "concurrently": "^7.1.0"
   }
 }
