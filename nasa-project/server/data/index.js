@@ -1,5 +1,6 @@
-import { parse } from 'csv-parse';
-import { createReadStream } from 'fs';
+const { parse } = require('csv-parse');
+const { createReadStream } = require('fs');
+const { join } = require('path');
 
 const habitablePlanets = [];
 
@@ -10,7 +11,7 @@ const isHabitablePlanet = (planet) => {
 
 function loadPlanetsData() {
     return new Promise((resolve, reject) => {
-        const fileStream = createReadStream(__dirname + '/kepler_data.csv');
+        const fileStream = createReadStream(join(__dirname, 'kepler_data.csv'));
     
         const parserOptions = {
             comment: '#',
@@ -34,7 +35,7 @@ function loadPlanetsData() {
     });
 }
 
-export {
+module.exports = {
     habitablePlanets,
     loadPlanetsData
 };
