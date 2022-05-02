@@ -1,14 +1,14 @@
+import makeRequest from "../utils/makeRequest";
+
 const API_URL = 'http://localhost:8000';
 
 async function httpGetPlanets() {
-  const request = await fetch(`${API_URL}/planets`);
-  const response = await request.json();
-  return response;
+  return await makeRequest(`${API_URL}/planets`);
 }
 
 async function httpGetLaunches() {
-  // TODO: Once API is ready.
-  // Load launches, sort by flight number, and return as JSON.
+  const fetchedLaunches = await makeRequest(`${API_URL}/lunches`);
+  return fetchedLaunches.sort((lunchA, lunchB) => lunchA.flightNumber - lunchB.flightNumber);
 }
 
 async function httpSubmitLaunch(launch) {

@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import { join } from 'path';
+import lunchesRouter from './routes/lunches/lunches.router';
 import planetsRouter from './routes/planets/planets.router';
 
 const app = express();
@@ -14,9 +15,10 @@ app.use(morgan('combined'));
 
 app.use(express.json());
 app.use(planetsRouter);
+app.use(lunchesRouter);
 app.use(express.static(join(__dirname, '..', 'public')))
 
-app.get('/', (_, res) => {
+app.get('/*', (_, res) => {
     res.sendFile(join(__dirname, '..', 'public', 'index.html'));
 });
 
