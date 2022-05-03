@@ -1,5 +1,7 @@
 import { habitablePlanets } from "../../data/index";
 
-const planets = habitablePlanets;
+function getAllPlanets() {
+    return habitablePlanets;
+}
 
-export default planets; 
+export default getAllPlanets; 

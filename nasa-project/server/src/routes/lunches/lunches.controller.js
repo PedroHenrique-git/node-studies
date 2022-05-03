@@ -1,9 +1,8 @@
-import lunches from "../../models/launches.model";
+import getAllLaunches from "../../models/launches.model";
 
 class LaunchesController {
     getAllLunches(_, res) {
-        const lunchesArray = Array.from(lunches.values());
-        return res.status(200).json(lunchesArray);
+        return res.status(200).json(getAllLaunches());
     }
 }
 

@@ -13,4 +13,8 @@ const launch = {
 
 lunches.set(launch.flightNumber, launch);
 
-export default lunches; 
+function getAllLaunches() {
+    return Array.from(lunches.values());
+}
+
+export default getAllLaunches; 
