@@ -1,4 +1,4 @@
-import getAllPlanets from "../../models/planets.model";
+import { getAllPlanets } from "../../models/planets.model";
 
 class PlanetsController {
     getAllPlanets(_, res) {

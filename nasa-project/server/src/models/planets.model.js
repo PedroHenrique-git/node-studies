@@ -4,4 +4,6 @@ function getAllPlanets() {
     return habitablePlanets;
 }
 
-export default getAllPlanets; 
+export {
+    getAllPlanets
+};

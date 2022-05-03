@@ -1,4 +1,6 @@
-const lunches = new Map();
+const launches = new Map();
+
+let latestFlightNumber = 100;
 
 const launch = {
     flightNumber: 100,
@@ -11,10 +13,28 @@ const launch = {
     success: true
 };
 
-lunches.set(launch.flightNumber, launch);
-
 function getAllLaunches() {
-    return Array.from(lunches.values());
+    return Array.from(launches.values());
 }
 
-export default getAllLaunches; 
+function addNewLaunch(launch) {
+    latestFlightNumber += 1; 
+
+    const newLaunch = {
+        ...launch,
+        flightNumber: latestFlightNumber,
+        customers: ['Zero to master', 'Nasa'],
+        upcoming: true,
+        success: true
+    }
+
+    launches.set(latestFlightNumber, newLaunch);
+}
+
+addNewLaunch(launch);
+
+export {
+    getAllLaunches,
+    addNewLaunch
+};
+
