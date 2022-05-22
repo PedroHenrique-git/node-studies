@@ -15,7 +15,7 @@ export default async function makeRequest(url, options = {}) {
 
         const response = await request.json();
         return response; 
-    } catch(err) {  
-        console.log('Error --> ', err);
+    } catch(err) {
+        return { ok: false };
     }
 }
