@@ -31,12 +31,12 @@ console.log('Worker process started...')
 const app = express()
 
 app.get('/', async (_, res) => {
-    await sleep()
+    await sleep(4000)
     res.send(`Performance example ${process.pid}`)
 })
 
 app.get('/timer', async (_, res) => {
-    await sleep()
+    await sleep(4000)
     res.send(`Ding ding ding! ${process.pid}`)
 })
 

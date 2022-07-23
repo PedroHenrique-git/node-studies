@@ -6,9 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "start:pm2": "npx pm2 start server.js -i max",
-    "stop:pm2": "npx pm2 start",
-    "delete:pm2": "npx pm2 delete"
+    "start:pm2": "npx pm2 start server.js -l logs.txt -i max",
+    "stop:pm2": "npx pm2 stop",
+    "delete:pm2": "npx pm2 delete",
+    "restart:pm2": "npx pm2 restart",
+    "logs:pm2": "npx pm2 logs",
+    "show:pm2": "npx pm2 show",
+    "show:monit:pm2": "npx pm2 monit",
+    "reload:pm2": "npx pm2 reload server"
   },
   "keywords": [],
   "author": "",
