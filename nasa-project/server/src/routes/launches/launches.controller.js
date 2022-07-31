@@ -1,11 +1,11 @@
-import { addNewLaunch, getAllLaunches, removeLaunch } from "../../models/launches.model";
+import { getAllLaunches, removeLaunch, scheduleNewLaunch } from "../../models/launches.model";
 
 class LaunchesController {
-    getAllLaunches(_, res) {
-        return res.status(200).json(getAllLaunches());
+    async getAllLaunches(_, res) {
+        return res.status(200).json(await getAllLaunches());
     }
 
-    insertNewLaunch(req, res) {
+    async insertNewLaunch(req, res) {
         const launch = req.body;
 
         if(
@@ -23,7 +23,7 @@ class LaunchesController {
             return res.status(400).json({ error: 'Invalid launchDate' }); 
         }
 
-        addNewLaunch(launch);
+        await scheduleNewLaunch(launch);
         return res.status(201).json(launch);
     }
 

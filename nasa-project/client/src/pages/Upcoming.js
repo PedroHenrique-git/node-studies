@@ -1,12 +1,10 @@
-import { useMemo } from "react";
-import { 
-  withStyles,
+import {
   Appear,
   Link,
   Paragraph,
-  Table,
-  Words,
+  Table, withStyles, Words
 } from "arwes";
+import { useMemo } from "react";
 
 import Clickable from "../components/Clickable";
 

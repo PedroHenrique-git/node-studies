@@ -1,8 +1,11 @@
+import { Launch } from "./launches.mongo";
+import { Planet } from './planets.mongo';
+
+const DEFAULT_FLIGHT_NUMBER = 100;
+
 const launches = new Map();
 
-let latestFlightNumber = 100;
-
-const launch = {
+const defaultLaunch = {
     flightNumber: 100,
     mission: 'Kepler exploration X',
     rocket: 'Explorer IS1',
@@ -13,22 +16,52 @@ const launch = {
     success: true
 };
 
-function getAllLaunches() {
-    return Array.from(launches.values());
+async function addDefaultLaunch() {
+    await saveLaunch(defaultLaunch);
 }
 
-function addNewLaunch(launch) {
-    latestFlightNumber += 1; 
+async function saveLaunch(launch) {
+    try {
+        const planet = await Planet.findOne({ kepler_name: launch.target });
 
-    const newLaunch = {
-        ...launch,
-        flightNumber: latestFlightNumber,
-        customers: ['Zero to master', 'Nasa'],
-        upcoming: true,
-        success: true
+        if(!planet) {
+            throw new Error("No matching planet was found!");
+        }
+        
+        await Launch.updateOne({ flightNumber: launch.flightNumber }, launch, { upsert: true })
+    } catch(err) {
+        console.log(`Could not save launch ${err}`);
     }
+}
 
-    launches.set(latestFlightNumber, newLaunch);
+async function scheduleNewLaunch(launch) {
+    try {
+        const latestFlightNumber = await getLatestFlightNumber();
+
+        const newLaunch = {
+            ...launch,
+            flightNumber: latestFlightNumber + 1, 
+            customers: ['ZTM','NASA'],
+            success: true,
+            upcoming: true
+        }
+
+        await saveLaunch(newLaunch);
+    } catch(err) {
+        console.log(`Could not schedule new launch ${err}`);    
+    }
+}
+
+async function getLatestFlightNumber() {
+    const latestLaunch = await Launch.findOne().sort('-flightNumber'); 
+
+    if(!latestLaunch) return DEFAULT_FLIGHT_NUMBER;
+
+    return latestLaunch.flightNumber;
+}
+
+async function getAllLaunches() {
+    return await Launch.find({});
 }
 
 function removeLaunch(id) {
@@ -42,11 +75,12 @@ function removeLaunch(id) {
     return deletedLaunch; 
 }
 
-addNewLaunch(launch);
+addDefaultLaunch();
 
 export {
     getAllLaunches,
-    addNewLaunch,
+    saveLaunch,
+    scheduleNewLaunch,
     removeLaunch
 };
 

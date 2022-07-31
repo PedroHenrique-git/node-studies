@@ -8,7 +8,7 @@ async function httpGetPlanets() {
 
 async function httpGetLaunches() {
   const fetchedLaunches = await makeRequest(`${API_URL}/launches`);
-  return fetchedLaunches.sort((launchA, launchB) => launchA.flightNumber - launchB.flightNumber);
+  return fetchedLaunches;
 }
 
 async function httpSubmitLaunch(launch) {
@@ -32,3 +32,4 @@ export {
   httpSubmitLaunch,
   httpAbortLaunch,
 };
+

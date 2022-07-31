@@ -1,5 +1,5 @@
+import { Appear, Paragraph, Table } from "arwes";
 import { useMemo } from "react";
-import { Appear, Table, Paragraph } from "arwes";
 
 const History = props => {
   const tableBody = useMemo(() => {

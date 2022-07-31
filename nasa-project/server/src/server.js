@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import http from 'http';
 import mongoose from 'mongoose';
-import { loadPlanetsData } from '../data';
 import app from './app';
+import { loadPlanetsData } from './data';
 
 dotenv.config();
 

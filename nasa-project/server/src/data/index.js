@@ -1,6 +1,7 @@
-const { parse } = require('csv-parse');
-const { createReadStream } = require('fs');
-const { join } = require('path');
+import { parse } from 'csv-parse';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { getAllPlanets, savePlanet } from '../models/planets.model';
 
 const habitablePlanets = [];
 
@@ -18,9 +19,9 @@ function loadPlanetsData() {
             columns: true
         }; 
 
-        const dataCallback = (data) => {
+        const dataCallback = async (data) => {
             if(isHabitablePlanet(data)) {
-                habitablePlanets.push(data);
+                await savePlanet(data);
             }
         }
 
@@ -29,7 +30,9 @@ function loadPlanetsData() {
             .on('error', (err) => {
                 reject(err);
             })
-            .on('end', () => {
+            .on('end', async () => {
+                const countPlanetsFound = (await getAllPlanets()).length;
+                console.log(`${countPlanetsFound} habitable planets found !`);
                 resolve();
             });
     });
