@@ -2,6 +2,8 @@ import request from 'supertest';
 import app from '../../app';
 import { mongoConnect, mongoDisconnect } from '../../services/mongo';
 
+const API_VERSION = 'v1';
+
 describe('Launches API', () => {
     beforeAll(async () => {
         await mongoConnect()
@@ -14,7 +16,7 @@ describe('Launches API', () => {
     describe('Test GET /launches', () => {
         it('It should respond with 200 success', async () => {
             await request(app)
-                .get('/launches')
+                .get(`/${API_VERSION}/launches`)
                 .expect('Content-type', /json/)
                 .expect(200);
         });
@@ -41,7 +43,7 @@ describe('Launches API', () => {
     
         it('It should respond with 200 success', async () => {
             const response = await request(app)
-                .post('/launches')
+                .post(`/${API_VERSION}/launches`)
                 .send(completeLaunchDate)
                 .expect('Content-type', /json/)
                 .expect(201);
@@ -55,7 +57,7 @@ describe('Launches API', () => {
     
         it('It should catch missing required properties', async () => {
             const response = await request(app)
-                .post('/launches')
+                .post(`/${API_VERSION}/launches`)
                 .send(launchDateWithoutDate)
                 .expect('Content-type', /json/)
                 .expect(400);
@@ -65,7 +67,7 @@ describe('Launches API', () => {
     
         it('It should catch invalid dates', async () => {
             const response = await request(app)
-                .post('/launches')
+                .post(`/${API_VERSION}/launches`)
                 .send(launchDataWithInvalidDate)
                 .expect('Content-type', /json/)
                 .expect(400);
