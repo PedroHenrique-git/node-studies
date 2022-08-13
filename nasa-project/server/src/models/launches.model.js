@@ -3,8 +3,6 @@ import { Planet } from './planets.mongo';
 
 const DEFAULT_FLIGHT_NUMBER = 100;
 
-const launches = new Map();
-
 const defaultLaunch = {
     flightNumber: 100,
     mission: 'Kepler exploration X',
@@ -64,15 +62,25 @@ async function getAllLaunches() {
     return await Launch.find({});
 }
 
-function removeLaunch(id) {
-    const deletedLaunch = launches.get(id);
-
-    if(!deletedLaunch) return false;
-
-    deletedLaunch.upcoming = false;
-    deletedLaunch.success = false;
+async function removeLaunch(id) {
+    try {
+        const launchById = await getLaunchById(id);
+        
+        if(!launchById) return false;
+        
+        const deletedLaunch  = await Launch.updateOne({ flightNumber: id }, {
+            upcoming: false,
+            success: false
+        });
     
-    return deletedLaunch; 
+        return deletedLaunch.modifiedCount === 1; 
+    } catch(err) {
+        console.log(`Could not delete launch ${err}`);      
+    }
+}
+
+async function getLaunchById(id) {
+    return await Launch.findOne({ flightNumber: id });    
 }
 
 addDefaultLaunch();

@@ -27,7 +27,7 @@ class LaunchesController {
         return res.status(201).json(launch);
     }
 
-    deleteLaunch(req, res) {
+    async deleteLaunch(req, res) {
         const { id } = req.params;
 
         const idNumber = Number(id); 
@@ -40,13 +40,13 @@ class LaunchesController {
             return res.status(400).json({ error: 'id must be a number' });    
         }
 
-        const deletedLaunch = removeLaunch(idNumber);
+        const deletedLaunch = await removeLaunch(idNumber);
 
         if(!deletedLaunch) {
             return res.status(400).json({ error: 'launch does not exists' });        
         }
 
-        return res.status(200).json(deletedLaunch);
+        return res.status(200).json({ message: 'launch aborted' });
     }
 }
 
