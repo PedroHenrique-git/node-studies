@@ -21,12 +21,6 @@ async function addDefaultLaunch() {
 
 async function saveLaunch(launch) {
   try {
-    const planet = await Planet.findOne({ kepler_name: launch.target });
-
-    if (!planet) {
-      throw new Error('No matching planet was found!');
-    }
-
     await Launch.findOneAndUpdate(
       { flightNumber: launch.flightNumber },
       launch,
@@ -39,6 +33,12 @@ async function saveLaunch(launch) {
 
 async function scheduleNewLaunch(launch) {
   try {
+    const planet = await Planet.findOne({ kepler_name: launch.target });
+
+    if (!planet) {
+      throw new Error('No matching planet was found!');
+    }
+
     const latestFlightNumber = await getLatestFlightNumber();
 
     const newLaunch = {
@@ -69,7 +69,7 @@ async function getAllLaunches() {
 
 async function removeLaunch(id) {
   try {
-    const launchById = await getLaunchById(id);
+    const launchById = await findLaunch({ flightNumber: id });
 
     if (!launchById) return false;
 
@@ -87,15 +87,16 @@ async function removeLaunch(id) {
   }
 }
 
-async function getLaunchById(id) {
-  return await Launch.findOne({ flightNumber: id });
+async function findLaunch(filter) {
+  return await Launch.findOne(filter);
 }
 
-async function loadLaunchData() {
+async function populateLaunches() {
   try {
     const requestLaunches = await spacexApi.post(`/launches/query`, {
       query: {},
       options: {
+        pagination: false,
         populate: [
           {
             path: 'rocket',
@@ -113,11 +114,47 @@ async function loadLaunchData() {
       },
     });
 
-    const launches = await requestLaunches.data.docs;
+    if (requestLaunches.status !== 200) {
+      throw new Error('Launch data download failed');
+    }
 
-    const rocketsNames = launches.map((launch) => launch.rocket.name);
-    console.log('rocketsNames --> ', rocketsNames);
-    console.log('Downloading launches data...');
+    const launchDocs = requestLaunches.data.docs;
+
+    for (const launchDoc of launchDocs) {
+      const payloads = launchDoc['payloads'];
+
+      const customers = payloads.flatMap((payload) => {
+        return payload['customers'];
+      });
+
+      const launch = {
+        flightNumber: launchDoc['flight_number'],
+        mission: launchDoc['name'],
+        rocket: launchDoc['rocket']['name'],
+        launchDate: launchDoc['date_local'],
+        upcoming: launchDoc['upcoming'],
+        success: launchDoc['success'],
+        customers,
+      };
+
+      await saveLaunch(launch);
+    }
+  } catch (err) {
+    console.log(`Could not populate launches ${err}`);
+  }
+}
+
+async function loadLaunchData() {
+  try {
+    const fistLaunch = await findLaunch({
+      flightNumber: 1,
+      rocket: 'Falcon 1',
+      mission: 'FalconSat',
+    });
+
+    if (fistLaunch) return;
+
+    await populateLaunches();
   } catch (err) {
     console.log(`Could not load launches ${err}`);
   }
