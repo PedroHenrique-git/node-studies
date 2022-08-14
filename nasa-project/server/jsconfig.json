@@ -1,5 +1,5 @@
 {
-    "compilerOptions": {
-        "types": ["jest", "node", "supertest"]
-    }
+  "compilerOptions": {
+    "types": ["jest", "node", "supertest"]
+  }
 }

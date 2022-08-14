@@ -6,40 +6,44 @@ import { getAllPlanets, savePlanet } from '../models/planets.model';
 const habitablePlanets = [];
 
 const isHabitablePlanet = (planet) => {
-    return planet['koi_disposition'] === 'CONFIRMED'
-        && planet['koi_insol'] > 0.36 && planet['koi_insol'] < 1.11 && planet['koi_prad'] < 1.6;
-}
+  return (
+    planet['koi_disposition'] === 'CONFIRMED' &&
+    planet['koi_insol'] > 0.36 &&
+    planet['koi_insol'] < 1.11 &&
+    planet['koi_prad'] < 1.6
+  );
+};
 
 function loadPlanetsData() {
-    return new Promise((resolve, reject) => {
-        const fileStream = createReadStream(join(__dirname, 'kepler_data.csv'));
-    
-        const parserOptions = {
-            comment: '#',
-            columns: true
-        }; 
+  return new Promise((resolve, reject) => {
+    const fileStream = createReadStream(join(__dirname, 'kepler_data.csv'));
 
-        const dataCallback = async (data) => {
-            if(isHabitablePlanet(data)) {
-                await savePlanet(data);
-            }
-        }
+    const parserOptions = {
+      comment: '#',
+      columns: true,
+    };
 
-        fileStream.pipe(parse(parserOptions))
-            .on('data', dataCallback)
-            .on('error', (err) => {
-                reject(err);
-            })
-            .on('end', async () => {
-                const countPlanetsFound = (await getAllPlanets()).length;
-                console.log(`${countPlanetsFound} habitable planets found !`);
-                resolve();
-            });
-    });
+    const dataCallback = async (data) => {
+      if (isHabitablePlanet(data)) {
+        await savePlanet(data);
+      }
+    };
+
+    fileStream
+      .pipe(parse(parserOptions))
+      .on('data', dataCallback)
+      .on('error', (err) => {
+        reject(err);
+      })
+      .on('end', async () => {
+        const countPlanetsFound = (await getAllPlanets()).length;
+        console.log(`${countPlanetsFound} habitable planets found !`);
+        resolve();
+      });
+  });
 }
 
 module.exports = {
-    habitablePlanets,
-    loadPlanetsData
+  habitablePlanets,
+  loadPlanetsData,
 };
-
