@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start:development": "nodemon -r dotenv/config -r sucrase/register ./src/server.js",
-    "start": "sucrase ./src -d ./dist --transforms imports && cd ./dist && node server.js",
+    "start": "sucrase ./src -d ./dist --transforms imports && npm run copy:kepler-data && npm run copy:public-folder && cd ./dist &&  node -r dotenv/config server.js",
+    "build": "sucrase ./src -d ./dist --transforms imports",
+    "copy:kepler-data": "npx copyfiles -f ./src/data/*.csv ./dist/data",
+    "copy:public-folder": "npx copyfiles -a ./public/** ./dist",
     "test": "jest --detectOpenHandles",
     "test-watch": "jest --watch --detectOpenHandles",
     "cluster": "npx pm2 start src/server.js -i max"
@@ -23,6 +26,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
+    "copyfiles": "^2.4.1",
     "cors": "^2.8.5",
     "csv-parse": "^5.0.4",
     "dotenv": "^16.0.1",
