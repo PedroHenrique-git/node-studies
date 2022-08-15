@@ -1,23 +1,7 @@
+import { DEFAULT_FLIGHT_NUMBER } from '../configs/constants';
 import spacexApi from '../services/spacex';
 import { Launch } from './launches.mongo';
 import { Planet } from './planets.mongo';
-
-const DEFAULT_FLIGHT_NUMBER = 100;
-
-const defaultLaunch = {
-  flightNumber: 100,
-  mission: 'Kepler exploration X',
-  rocket: 'Explorer IS1',
-  launchDate: new Date('December 27, 2030'),
-  target: 'Kepler-442 b',
-  customers: ['ZTM', 'NASA'],
-  upcoming: true,
-  success: true,
-};
-
-async function addDefaultLaunch() {
-  await saveLaunch(defaultLaunch);
-}
 
 async function saveLaunch(launch) {
   try {
@@ -63,8 +47,29 @@ async function getLatestFlightNumber() {
   return latestLaunch.flightNumber;
 }
 
-async function getAllLaunches() {
-  return await Launch.find({});
+async function getAllLaunches(options) {
+  const { page, order, skip, limit } = options;
+
+  const totalPages = Math.ceil((await Launch.count()) / limit);
+  const nextPage = page !== totalPages ? page + 1 : null;
+  const prevPage = page !== 1 ? page - 1 : null;
+
+  const paginationConfig = {
+    totalPages,
+    nextPage,
+    prevPage,
+    order,
+  };
+
+  const launches = await Launch.find({})
+    .sort({ flightNumber: order === 'Asc' ? 1 : -1 })
+    .skip(skip)
+    .limit(limit);
+
+  return {
+    data: launches,
+    paginationConfig,
+  };
 }
 
 async function removeLaunch(id) {
@@ -159,8 +164,6 @@ async function loadLaunchData() {
     console.log(`Could not load launches ${err}`);
   }
 }
-
-addDefaultLaunch();
 
 export {
   getAllLaunches,

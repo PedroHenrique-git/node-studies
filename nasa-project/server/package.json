@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start:development": "nodemon -r sucrase/register ./src/server.js",
+    "start:development": "nodemon -r dotenv/config -r sucrase/register ./src/server.js",
     "start": "sucrase ./src -d ./dist --transforms imports && cd ./dist && node server.js",
     "test": "jest --detectOpenHandles",
     "test-watch": "jest --watch --detectOpenHandles",

@@ -1,12 +1,14 @@
 import {
   getAllLaunches,
   removeLaunch,
-  scheduleNewLaunch,
+  scheduleNewLaunch
 } from '../../models/launches.model';
+import { getPagination } from '../../services/query';
 
 class LaunchesController {
-  async getAllLaunches(_, res) {
-    return res.status(200).json(await getAllLaunches());
+  async getAllLaunches(req, res) {
+    const pagination = getPagination(req.query);
+    return res.status(200).json(await getAllLaunches(pagination));
   }
 
   async insertNewLaunch(req, res) {

@@ -8,7 +8,7 @@ async function httpGetPlanets() {
 
 async function httpGetLaunches() {
   const fetchedLaunches = await makeRequest(`${API_URL}/launches`);
-  return fetchedLaunches;
+  return fetchedLaunches.data;
 }
 
 async function httpSubmitLaunch(launch) {
