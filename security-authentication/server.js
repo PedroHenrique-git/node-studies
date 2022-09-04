@@ -6,7 +6,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const { Strategy } = require('passport-google-oauth20');
 const passport = require('passport');
-const { session } = require('passport');
+const cookieSession = require('cookie-session');
 
 dotenv.config();
 
@@ -15,7 +15,9 @@ const PORT = 3000;
 const config = {
     CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     CLIENT_SECRET: process.env.GOOGLE_SECRET,
-    callbackURL: '/auth/google/callback' 
+    COOKIE_KEY_1: process.env.COOKIE_KEY_1,
+    COOKIE_KEY_2: process.env.COOKIE_KEY_2,
+    callbackURL: '/auth/google/callback'
 }
 
 const AUTH_OPTIONS = {
@@ -30,7 +32,7 @@ const serverOptions = {
 }
 
 function checkLoggedIn(req, res, next) {
-    const isLoggedIn = true;
+    const isLoggedIn = req.isAuthenticated() && req.user;
 
     if(!isLoggedIn) {
         return res.status(401).json({ error: 'You must log in!' });
@@ -44,12 +46,32 @@ function verifyCallback(accessToke, refreshToken, profile, done) {
     done(null, profile)
 }
 
-passport.use(new Strategy(AUTH_OPTIONS, verifyCallback))
+passport.use(new Strategy(AUTH_OPTIONS, verifyCallback));
+
+// Save the session to the cookie
+passport.serializeUser((user, done) => {
+    console.log('user --> ', user);
+    done(null, user);
+});
+
+// Read the session from the cookie
+passport.deserializeUser((obj, done) => {
+    console.log('obj --> ', obj);
+    done(null, obj);
+});
 
 const app = express();
 
 app.use(helmet());
+
+app.use(cookieSession({
+    name: 'session',
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [config.COOKIE_KEY_1, config.COOKIE_KEY_2]
+}));
+
 app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/auth/google', passport.authenticate('google', {
     scope: ['email']
@@ -59,7 +81,7 @@ app.get('/auth/google/callback',
     passport.authenticate('google', { 
         failureRedirect: '/',
         successRedirect: '/secret',
-        session: false
+        session: true
     }),
     () => {
         console.log('Google called us back!');
