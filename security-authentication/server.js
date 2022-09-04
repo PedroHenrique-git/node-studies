@@ -88,7 +88,11 @@ app.get('/auth/google/callback',
     }
 );
 
-app.get('/auth/logout', (req, res) => {});
+app.get('/auth/logout', (req, res) => {
+    req.logout();
+    
+    return res.redirect('/');
+});
 
 app.get('/', (_ ,res) => {
     return res.sendFile(path.join(__dirname, 'public', 'index.html'));
