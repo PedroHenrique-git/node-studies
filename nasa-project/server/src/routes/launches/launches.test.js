@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../../app';
+import { loadPlanetsData } from '../../data/index'
 import { mongoConnect, mongoDisconnect } from '../../services/mongo';
 
 const API_VERSION = 'v1';
@@ -7,6 +8,7 @@ const API_VERSION = 'v1';
 describe('Launches API', () => {
   beforeAll(async () => {
     await mongoConnect();
+    await loadPlanetsData();
   });
 
   afterAll(async () => {
