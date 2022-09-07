@@ -24,6 +24,7 @@ jobs:
         uses: supercharge/mongodb-github-action@1.6.0
         with: 
           mongodb-version: ${{ matrix.mongodb-version }}
+      - run: cd nasa-project && npm install
       - run: cd nasa-project && npm run install-both
       - run: cd nasa-project && npm run build:client
       - run: cd nasa-project && npm run test
