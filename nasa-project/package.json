@@ -14,15 +14,16 @@
     "server": "npm run start:development --prefix server",
     "client": "npm run start --prefix client",
     "watch": "concurrently \"npm run server\" \"npm run client\"",
-    "deploy": "npm run build --prefix client && npm run start --prefix server",
-    "deploy:cluster": "npm run build --prefix client && npm run cluster --prefix server",
+    "deploy": "rimraf ./server/dist && npm run build:client && npm run start --prefix server",
+    "deploy:cluster": "npm run build:client && npm run cluster --prefix server",
     "test": "concurrently \"npm run test --prefix server\" \"npm run test --prefix client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^7.1.0"
+    "concurrently": "^7.1.0",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",
