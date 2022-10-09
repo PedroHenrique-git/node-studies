@@ -9,8 +9,13 @@ const typesArray = loadFilesSync('**/*', {
     extensions: ['graphql']
 })
 
+const resolversArray = loadFilesSync('**/*', {
+    extensions: ['resolvers.js']
+})
+
 const schema = makeExecutableSchema({
-    typeDefs: typesArray
+    typeDefs: typesArray,
+    resolvers: resolversArray
 })
 
 const app = express();

@@ -11,6 +11,29 @@ const products = [
     }
 ]
 
+function getAllProducts() {
+    return products; 
+}
+
+function getProductById(id) {
+    return products.find(product => product.id === id)
+}
+
+function getProductByPriceRange(min, max) {
+    return products.filter(product => product.price >= min && product.price <= max)
+}
+
+function addProduct(id, description, price) {
+    return products.push({
+        description,
+        id,
+        price
+    })
+}
+
 module.exports = {
-    products
+    getAllProducts,
+    getProductById,
+    getProductByPriceRange,
+    addProduct
 }

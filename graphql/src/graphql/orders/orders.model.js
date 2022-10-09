@@ -15,6 +15,10 @@ const orders = [
     }
 ]
 
+function getAllProducts() {
+    return orders; 
+}
+
 module.exports = {
-    orders
+    getAllProducts
 }
