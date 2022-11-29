@@ -2,6 +2,7 @@
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
 const socket = io('http://localhost:3000')
+let isReferee = false
 let paddleIndex = 0;
 
 let width = 500;
@@ -169,8 +170,11 @@ function animate() {
 function startGame() {
   createCanvas();
   renderIntro();
+
+  socket.emit('ready')
   
-  paddleIndex = 0;
+  paddleIndex = isReferee ? 0 : 1;
+
   window.requestAnimationFrame(animate);
   canvas.addEventListener('mousemove', (e) => {
     playerMoved = true;
@@ -188,4 +192,16 @@ function startGame() {
 
 // On Load
 startGame();
+
+socket.on('connect', () => {
+  console.log('Connect as...', socket.id)
+})
+
+socket.on('startGame', (refereeId) => {
+  console.log('refereeId id is ', refereeId)
+
+  isReferee = socket.id === refereeId
+
+  startGame();
+})
 
