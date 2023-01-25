@@ -18,6 +18,6 @@ COPY nasa-project/server/ server/
 
 USER node
 
-CMD [ "npm", "run", "deploy" ]
+CMD [ "npm", "run", "deploy"]
 
 EXPOSE 8000
