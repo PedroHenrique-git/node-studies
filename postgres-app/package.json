@@ -1,0 +1,19 @@
+{
+  "name": "postgres-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tasks.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "pg": "^8.9.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.6.6"
+  }
+}
