@@ -2,6 +2,22 @@ const express = require("express");
 const session = require("express-session");
 const { join } = require("path");
 const helmet = require("helmet");
+const Ajv = require("ajv");
+const he = require("he");
+
+const ajv = new Ajv();
+
+const schema = {
+  title: "Greeting",
+  properties: {
+    msg: { type: "string" },
+    name: { type: "string" },
+  },
+  additionalProperties: false,
+  required: ["msg"],
+};
+
+const validate = ajv.compile(schema);
 
 const index = require("./routes/index");
 const auth = require("./routes/auth");
@@ -39,6 +55,43 @@ app.get("/pollution", (req, res) => {
 
     const upper = (msg ?? "").toUpperCase();
     res.send(upper);
+  });
+});
+
+app.post("/json-pollution", (req, res) => {
+  if (!validate(req.body, schema)) {
+    return res.end("");
+  }
+
+  const { msg, name } = req.body;
+
+  if (name) {
+    return res.end(`${msg} ${name}`);
+  }
+
+  return res.end(msg);
+});
+
+function getServiceStatus(callback) {
+  const status = "All systems are running";
+  callback(status);
+}
+
+app.get("/xss", (req, res) => {
+  const { previous, lang, token } = req.query;
+
+  getServiceStatus((status) => {
+    const href = he.encode(`${previous}${token}/${lang}`);
+
+    res.send(`
+      <h1>Service status</h1>
+      <div id="status">
+        ${status}
+      </div>
+      <div>
+        <a href="${href}">Back</a>
+      </div>
+    `);
   });
 });
 
