@@ -1,0 +1,20 @@
+{
+  "name": "benchmarking-http",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "benchmarking": "autocannon --connections 100 http://localhost:3000/",
+    "benchmarking:post": "autocannon --connections 100 --method POST --headers 'content-type=application/json' --body '{ \"hello\": \"world\" }' http://localhost:3000/",
+    "start:memory": "node --max-old-space-size=10 profiling-memory.js",
+    "start:inspect": "node --inspect profiling-memory.js"
+  },
+  "dependencies": {
+    "autocannon": "^7.10.0",
+    "benchmark": "^2.1.4",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
+  }
+}
