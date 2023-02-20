@@ -1,28 +1,28 @@
 name: NASA Project CI
-on: 
+on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 jobs:
   build:
     env:
       CI: true
       MONGODB_CONNECTION_STRING: mongodb://localhost/nasa
     strategy:
-      matrix: 
+      matrix:
         node-version: [14.x, 16.x]
-        mongodb-version: ['4.4']
+        mongodb-version: ["4.4"]
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v2
       - name: Use Node.js version ${{ matrix.node-version }}
         uses: actions/setup-node@v2
-        with: 
+        with:
           node-version: ${{ matrix.node-version }}
       - name: Use MongoDB from Github actions
         uses: supercharge/mongodb-github-action@1.6.0
-        with: 
+        with:
           mongodb-version: ${{ matrix.mongodb-version }}
       - run: cd nasa-project && npm install
       - run: cd nasa-project && npm run install-both
